@@ -1,0 +1,8 @@
+to do
+
+
+List out all quizzes when the page loads
+You can select a quiz in order to take it
+When you select a quiz, it jumps to the first question
+When you answer a question, it will tell you whether you're right or wrong, and then take you to the next question
+If there are no more questions, it will tell you your score

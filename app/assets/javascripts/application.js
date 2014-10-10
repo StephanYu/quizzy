@@ -11,8 +11,8 @@
 // about supported directives.
 //
 //= require jquery
+//= require bootstrap-sprockets
 //= require jquery_ujs
 //= require turbolinks
 //= require underscore
-// 
-// Your Quizzy code should go here.
+//= require custom.js
