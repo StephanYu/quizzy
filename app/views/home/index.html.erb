@@ -1,11 +1,21 @@
 
-  <div class="list-group">
+  <div class="list-group" id="quizz-list">
     <li class="list-group-item list-group-item-warning">Please choose a quizz from below:</li>
     
     <script type="text/template" class="my-template">
-      <a href="#" class="list-group-item"><%%= content.title %></a>
+      <a href="#" id="<%%= content.id %>" class="list-group-item quizz-title"><%%= content.title %></a>
     </script>
-    
+
   </div>
 
+  <div class="panel panel-warning hidden" id="question-main">
+    <script type="text/template" class="my-template2">
+    <div class="panel-heading"><%%= content.question %></div>
+      <ul class="list-group">
+        <%%  _.each(content.choices, function(ans) { %>
+          <a href="#" class="list-group-item"><%%= ans %></a>
+        <%% }); %>
+      </ul>
+    </script>
+  </div>
 
