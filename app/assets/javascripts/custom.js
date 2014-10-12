@@ -6,6 +6,9 @@ $(document).ready(function() {
   var template2 = $(".my-template2").html();
   var uncompiledTemplate2 = _.template(template2);
 
+  var template3 = $(".my-template3").html();
+  var uncompiledTemplate3 = _.template(template3);
+
   $.get('/quizzes', function(data) {
     // data = [ {id: 1, title: "..."}, {id:2, title: "..."} ]
     _.each(data, function(element) {
@@ -21,27 +24,115 @@ $(document).ready(function() {
 
   // You can select a quiz in order to take it
   // When you select a quiz, it jumps to the first question
-    // on click of list element trigger: GET /quizzes/:id/questions/:id to get a single question
+    // on click of list element trigger: GET /quizzes/:id/questions to get a question
     $("#quizz-list").on("click", ".quizz-title", function() {
-      // var $title = $(this).text();
       var quizQuestions = [];
+      var quizQuestion;
       var $id = $(this).attr("id");
+
       $.get("/quizzes/" + $id + "/questions/", function(data) {
-       
         quizQuestions = data;
-      
-        // console.log(quizQuestions);
-        //remove previous template
         $("#quizz-list").remove();
-        //add new template
-        var quizQuestion = quizQuestions.pop();
-        console.log(quizQuestion);
+      
+        quizQuestion = quizQuestions.pop();
         var choices = quizQuestion.choices.split(";");
         quizQuestion.choices = choices;
         var quizQuestionsObject = uncompiledTemplate2({content: quizQuestion});
         $("#question-main").removeClass("hidden").append(quizQuestionsObject);
-        // console.log(quizQuestionObject);
-      
       });
+
+      $("#question-main").on("click", ".answer-choice", function() {
+          var answer = $(this).text();
+          var quizzResponse;
+          
+          if (answer === quizQuestion.answer) {
+            var correctAnswer = {
+                response: "You are correct",
+                score: 5
+            };
+            
+            quizzResponse = uncompiledTemplate3({content: correctAnswer});
+            $('.modal-content').empty().append(quizzResponse);
+            
+            $("#btn-next").on("click", function() {
+              //move to next question
+              if (quizQuestions.length > 0) {
+                quizQuestion = quizQuestions.pop();
+                var choices = quizQuestion.choices.split(";");
+                quizQuestion.choices = choices;
+                var quizQuestionsObject = uncompiledTemplate2({content: quizQuestion});
+                $("#question-main").html(quizQuestionsObject);
+
+                // update scores table PATCH/PUT /scores/1
+                DataToSend = {
+                                score: correctAnswer.score
+                             };
+                $.ajax({
+                    type: "POST",
+                    url: "/scores/" + $id,
+                    data: JSON.stringify(DataToSend),
+                    dataType: "json",
+                    success: function (msg) {
+                        console.log('Success');
+                    },
+                    error: function (err){
+                        console.log('Error');
+                    }
+                });
+                
+
+              } else {
+                //pop up giving final score and saying quizz complete
+                  //# GET /scores/1
+                // then redirect to main quizzes page
+                var btnQuizz = "<button type='button' class='btn btn-warning' data-dismiss='modal' id='btn-quizz'>Back to Main</button>";
+                var data = {
+                  response: "Congratulations",
+                  score: 100
+                };
+                var finalResponse = uncompiledTemplate3({content: data});
+                $('.modal-content').empty().append(finalResponse);
+                $('.modal-content').find('.modal-footer').html(btnQuizz);
+                $("#btn-quizz").on('click', function() {
+                  $.get('/quizzes', function(data) {
+                      // data = [ {id: 1, title: "..."}, {id:2, title: "..."} ]
+                      $('.list-group').empty();
+                      _.each(data, function(element) {
+                        // element = {id: 1, title: "..."}
+                        var quizData = {
+                          title: element.title,
+                          id: element.id
+                        };
+                        var quizHTML = uncompiledTemplate({content: quizData});
+                        $('.list-group').append(quizHTML);
+                      });
+                  });
+                });
+                // $.get('/scores', function(data) {
+      
+                // });
+                
+              }
+            });
+
+          } else {
+            var incorrectAnswer = {
+                response: "You are wrong",
+                score: -5
+            };
+            quizzResponse = uncompiledTemplate3({content: incorrectAnswer});
+            $('.modal-content').empty().append(quizzResponse);
+          }
+          
+      });
+
     });
+
+  
+
+
+
+
+
+
 });
