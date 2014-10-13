@@ -22,9 +22,22 @@ $(document).ready(function() {
     });
   });
 
+  // You can create a quizz 
+    $("#create-quizz-btn").on('click', function() {
+      $("#add-quizz-form").slideDown().removeClass("hidden");
+      $("#add-quizz-btn").on('click', function() {
+        //post form title to database POST /quizzes
+        var $quizzTitle = $("#quizz-title").val();
+        quizzTitle = {
+                        title: $quizzTitle
+                     };
+        $.post( "/quizzes", function( quizzTitle ) {
+          console.log(quizzTitle);
+        });
+      });
+    });
+
   // You can select a quiz in order to take it
-  // When you select a quiz, it jumps to the first question
-    // on click of list element trigger: GET /quizzes/:id/questions to get a question
     $("#quizz-list").on("click", ".quizz-title", function() {
       var quizQuestions = [];
       var quizQuestion;
