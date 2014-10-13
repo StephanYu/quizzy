@@ -18,7 +18,7 @@ $(document).ready(function() {
         id: element.id
       };
       var quizHTML = uncompiledTemplate({content: quizData});
-      $('.list-group').append(quizHTML);
+      $('#quizz-list').append(quizHTML);
     });
   });
 
@@ -29,10 +29,9 @@ $(document).ready(function() {
       var quizQuestions = [];
       var quizQuestion;
       var $id = $(this).attr("id");
-
       $.get("/quizzes/" + $id + "/questions/", function(data) {
         quizQuestions = data;
-        $("#quizz-list").remove();
+        $("#quizz-list").addClass("hidden");
       
         quizQuestion = quizQuestions.pop();
         var choices = quizQuestion.choices.split(";");
@@ -67,18 +66,21 @@ $(document).ready(function() {
                 DataToSend = {
                                 score: correctAnswer.score
                              };
-                $.ajax({
-                    type: "POST",
-                    url: "/scores/" + $id,
-                    data: JSON.stringify(DataToSend),
-                    dataType: "json",
-                    success: function (msg) {
-                        console.log('Success');
-                    },
-                    error: function (err){
-                        console.log('Error');
-                    }
+                $.post( "/scores", function( DataToSend ) {
+                  console.log(DataToSend);
                 });
+                // $.ajax({
+                //     type: "PATCH",
+                //     url: "/scores/" + $id,
+                //     data: DataToSend,
+                //     dataType: "json",
+                //     success: function (msg) {
+                //         console.log('Success');
+                //     },
+                //     error: function (err){
+                //         console.log('Error');
+                //     }
+                // });
                 
 
               } else {
@@ -94,24 +96,9 @@ $(document).ready(function() {
                 $('.modal-content').empty().append(finalResponse);
                 $('.modal-content').find('.modal-footer').html(btnQuizz);
                 $("#btn-quizz").on('click', function() {
-                  $.get('/quizzes', function(data) {
-                      // data = [ {id: 1, title: "..."}, {id:2, title: "..."} ]
-                      $('.list-group').empty();
-                      _.each(data, function(element) {
-                        // element = {id: 1, title: "..."}
-                        var quizData = {
-                          title: element.title,
-                          id: element.id
-                        };
-                        var quizHTML = uncompiledTemplate({content: quizData});
-                        $('.list-group').append(quizHTML);
-                      });
-                  });
+                    $('#question-main').empty().addClass("hidden");
+                    $("#quizz-list").removeClass("hidden");
                 });
-                // $.get('/scores', function(data) {
-      
-                // });
-                
               }
             });
 
@@ -122,6 +109,56 @@ $(document).ready(function() {
             };
             quizzResponse = uncompiledTemplate3({content: incorrectAnswer});
             $('.modal-content').empty().append(quizzResponse);
+
+            // move to next question in the quizz
+            $("#btn-next").on("click", function() {
+              //move to next question
+              if (quizQuestions.length > 0) {
+                quizQuestion = quizQuestions.pop();
+                var choices = quizQuestion.choices.split(";");
+                quizQuestion.choices = choices;
+                var quizQuestionsObject = uncompiledTemplate2({content: quizQuestion});
+                $("#question-main").html(quizQuestionsObject);
+
+                // update scores table PATCH/PUT /scores/1
+                DataToSend = {
+                                score: correctAnswer.score
+                             };
+                $.post( "/scores", function( DataToSend ) {
+                  console.log(DataToSend);
+                });
+                // $.ajax({
+                //     type: "POST",
+                //     url: "/scores/" + $id,
+                //     data: DataToSend,
+                //     dataType: "json",
+                //     success: function (msg) {
+                //         console.log('Success');
+                //     },
+                //     error: function (err){
+                //         console.log('Error');
+                //     }
+                // });
+                
+
+              } else {
+                //pop up giving final score and saying quizz complete
+                  //# GET /scores/1
+                // then redirect to main quizzes page
+                var btnQuizz = "<button type='button' class='btn btn-warning' data-dismiss='modal' id='btn-quizz'>Back to Main</button>";
+                var data = {
+                  response: "Congratulations",
+                  score: 100
+                };
+                var finalResponse = uncompiledTemplate3({content: data});
+                $('.modal-content').empty().append(finalResponse);
+                $('.modal-content').find('.modal-footer').html(btnQuizz);
+                $("#btn-quizz").on('click', function() {
+                  $('#question-main').empty().addClass("hidden");
+                  $("#quizz-list").removeClass("hidden");
+                });
+              }
+            });
           }
           
       });

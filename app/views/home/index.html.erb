@@ -1,45 +1,40 @@
 
   <div class="list-group" id="quizz-list">
     <li class="list-group-item list-group-item-warning" id="main-list-title">Please choose a quizz from below:</li>
-    
-    <script type="text/template" class="my-template">
-      <a href="#" id="<%%= content.id %>" class="list-group-item quizz-title"><%%= content.title %></a>
-    </script>
-
+    <!-- This is where each quiz item goes. You get them from the templates -->
   </div>
 
-  <div class="panel panel-warning hidden" id="question-main">
-    <script type="text/template" class="my-template2">
-    <div class="panel-heading"><%%= content.question %></div>
-      <ul class="list-group">
-        <%%  _.each(content.choices, function(ans) { %>
-          <a href="#" class="list-group-item answer-choice" data-toggle="modal" data-target="#myModal"><%%= ans %></a>
-        <%% }); %>
-      </ul>
-    </script>
-  </div>
+  <div class="panel panel-warning hidden" id="question-main"></div>
 
   <div class="modal fade" id="myModal">
     <div class="modal-dialog">
       <div class="modal-content">
-        
-        <script type="text/template" class="my-template3">
-          
-          <div class="modal-header">
-            <h4 class="modal-title"><%%= content.response %></h4>
-          </div>
-          <div class="modal-body">
-            <p>You scored: <%%= content.score %> Points</p>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-primary" data-dismiss="modal" id="btn-next">Next Question</button>
-          </div>
-      
-        </script>
-
-
       </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
   </div><!-- /.modal -->
 
+  <script type="text/template" class="my-template">
+    <a href="#" id="<%%= content.id %>" class="list-group-item quizz-title"><%%= content.title %></a>
+  </script>
+
+  <script type="text/template" class="my-template2">
+    <div class="panel-heading"><%%= content.question %></div>
+    <ul class="list-group" id="quizz-answers">
+      <%%  _.each(content.choices, function(ans) { %>
+        <a href="#" class="list-group-item answer-choice" data-toggle="modal" data-target="#myModal"><%%= ans %></a>
+      <%% }); %>
+    </ul>
+  </script>
+
+  <script type="text/template" class="my-template3">    
+    <div class="modal-header">
+      <h4 class="modal-title"><%%= content.response %></h4>
+    </div>
+    <div class="modal-body">
+      <p>You scored: <%%= content.score %> Points</p>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-primary" data-dismiss="modal" id="btn-next">Next Question</button>
+    </div>
+  </script>
   
