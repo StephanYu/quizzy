@@ -37,17 +37,30 @@ $(document).ready(function() {
 
 
       $("#quizz-form-btn").on('click', function(e) {
-      e.preventDefault();
+        e.preventDefault();
         //post form title to database POST /quizzes
-        var $quizzTitle = $("#quizz-title").val();
+        var id;
+        var $quizzTitle = $.trim($("#quizz-title").val());
+        $("#quizz-title").val("");
+
         quizzTitle = {
                         quiz: { title: $quizzTitle }
                      };
         $.post( "/quizzes", quizzTitle, function(data) {
-          console.log(data.entity.id);
+          
+          id = data.entity.id;
+          var quizData = {
+            title: $quizzTitle,
+            id:    id
+          };
+          // re-render main view of quizzes
+          var quizHTML = uncompiledTemplate({content: quizData});
+          $('#quizz-list').append(quizHTML);
         });
+        //remove html() of #add-quizz-form and replace with my-template5
+          //add new text input fields for question, correct answer, and choices
+          //add new button to add new question
 
-        //remove html() of #add-quizz-form and replace with #add-questions-form
       });
     });
     //creating questions
@@ -75,6 +88,7 @@ $(document).ready(function() {
         var $quizzTitle;
           //get quizzes and then search for title 
           $quizzTitle = $.trim($("#quizz-title").val());
+          $("#quizz-title").val("");
 
           $.get('/quizzes', function(data) {
             _.each(data, function(element) {
@@ -90,7 +104,7 @@ $(document).ready(function() {
                     success: function (msg) {
                       console.log('Success');
                       // re-render main view of quizzes
-                      $("#quizz-list").find("#" + $quizzId).remove();
+                      $("#quizz-list").find("#" + $quizzId).detach();
                     },
                     error: function (err){
                       console.log('Error');
