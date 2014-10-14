@@ -9,6 +9,9 @@ $(document).ready(function() {
   var template3 = $(".my-template3").html();
   var uncompiledTemplate3 = _.template(template3);
 
+  var template4 = $(".my-template4").html();
+  var uncompiledTemplate4 = _.template(template4);
+
   $.get('/quizzes', function(data) {
     // data = [ {id: 1, title: "..."}, {id:2, title: "..."} ]
     _.each(data, function(element) {
@@ -24,16 +27,78 @@ $(document).ready(function() {
 
   // You can create a quizz 
     $("#create-quizz-btn").on('click', function() {
-      $("#add-quizz-form").slideDown().removeClass("hidden");
-      $("#add-quizz-btn").on('click', function() {
+      $("#quizz-form").empty().slideDown().removeClass("hidden");
+
+      var quizFormAdd = {
+        type: "Add"
+      };
+      var quizHTML = uncompiledTemplate4({content: quizFormAdd});
+      $('#quizz-form').append(quizHTML);
+
+
+      $("#quizz-form-btn").on('click', function(e) {
+      e.preventDefault();
         //post form title to database POST /quizzes
         var $quizzTitle = $("#quizz-title").val();
         quizzTitle = {
-                        title: $quizzTitle
+                        quiz: { title: $quizzTitle }
                      };
-        $.post( "/quizzes", function( quizzTitle ) {
-          console.log(quizzTitle);
+        $.post( "/quizzes", quizzTitle, function(data) {
+          console.log(data.entity.id);
         });
+
+        //remove html() of #add-quizz-form and replace with #add-questions-form
+      });
+    });
+    //creating questions
+    // POST /quizzes/:id/questions
+    // {
+    // "question[question]": "What is the capitol of Texas?",
+    // "question[answer]": "Austin",
+    // "question[choices": "Austin;Banana;Germany",
+    // "question[type]": "multiple"
+    // }
+
+  // You can delete a quizz 
+    $("#remove-quizz-btn").on('click', function() {
+      $("#quizz-form").empty().slideDown().removeClass("hidden");
+      
+      var quizFormRemove = {
+        type: "Remove"
+      };
+      var quizHTML = uncompiledTemplate4({content: quizFormRemove});
+      $('#quizz-form').append(quizHTML);
+
+      $("#quizz-form-btn").on('click', function(e) {
+        e.preventDefault();
+        var $quizzId;
+        var $quizzTitle;
+          //get quizzes and then search for title 
+          $quizzTitle = $.trim($("#quizz-title").val());
+
+          $.get('/quizzes', function(data) {
+            _.each(data, function(element) {
+              //if titles match, then strip id from it
+              if(element.title === $quizzTitle) {
+                $quizzId = element.id;
+                console.log($quizzId);
+                // DELETE /quizzes/:id
+                $.ajax({
+                    type: "DELETE",
+                    url: "/quizzes/" + $quizzId,
+                    dataType: "json",
+                    success: function (msg) {
+                      console.log('Success');
+                      // re-render main view of quizzes
+                      $("#quizz-list").find("#" + $quizzId).remove();
+                    },
+                    error: function (err){
+                      console.log('Error');
+                    }
+                });
+              }
+            });
+          });
       });
     });
 

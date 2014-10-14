@@ -4,6 +4,7 @@
     <!-- This is where each quiz item goes. You get them from the templates -->
   </div>
   <button type="button" class="btn btn-primary" id='create-quizz-btn'>Create Quizz</button>
+  <button type="button" class="btn btn-danger" id='remove-quizz-btn'>Remove Quizz</button>
 
   <div class="panel panel-warning hidden" id="question-main"></div>
 
@@ -13,21 +14,46 @@
       </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
   </div><!-- /.modal -->
-<div class="form-box hidden" id="add-quizz-form">
-  <form class="form-horizontal" role="form">
-    <div class="form-group">
-      <label for="quizz-title" class="col-sm-2 control-label">Title</label>
-      <div class="col-sm-10">
-        <input type="text" class="form-control" id="quizz-title" placeholder="Add Quizz Title here">
+
+<div class="form-box hidden" id="quizz-form">
+  <script type="text/template" class="my-template4">
+    <form class="form-horizontal" role="form">
+      <div class="form-group">
+        <label for="quizz-title" class="col-sm-2 control-label"><%%= content.type %> Title</label>
+        <div class="col-sm-10">
+          <input type="text" class="form-control" id="quizz-title" placeholder="<%%= content.type %> Quizz Title here">
+        </div>
       </div>
-    </div>
-    <div class="form-group">
-      <div class="col-sm-offset-2 col-sm-10">
-        <button type="submit" class="btn btn-warning" id="add-quizz-btn">Add</button>
+      <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-10">
+          <button type="submit" class="btn btn-warning" id="quizz-form-btn"><%%= content.type %></button>
+        </div>
       </div>
-    </div>
-  </form>
+    </form>
+  </script>
 </div>
+
+  <script type="text/template" class="my-template5">
+    <form class="form-horizontal" role="form">
+     <div class="form-group">
+       <label for="quizz-title" class="col-sm-2 control-label">Question</label>
+       <div class="col-sm-10">
+         <input type="text" class="form-control" id="quizz-title" placeholder="Add Question here">
+       </div>
+     </div>
+      <div class="form-group">
+       <label for="quizz-title" class="col-sm-2 control-label">Correct Answer</label>
+       <div class="col-sm-10">
+         <input type="text" class="form-control" id="quizz-title" placeholder="Add Correct Answer here">
+       </div>
+     </div>
+     <div class="form-group">
+       <div class="col-sm-offset-2 col-sm-10">
+         <button type="submit" class="btn btn-warning" id="add-quizz-btn">Add More Questions</button>
+       </div>
+     </div>
+    </form>
+  </script>
 
   <script type="text/template" class="my-template">
     <a href="#" id="<%%= content.id %>" class="list-group-item quizz-title"><%%= content.title %></a>
