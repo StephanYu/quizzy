@@ -12,6 +12,9 @@ $(document).ready(function() {
   var template4 = $(".my-template4").html();
   var uncompiledTemplate4 = _.template(template4);
 
+  var template5 = $(".my-template5").html();
+  var uncompiledTemplate5 = _.template(template5);
+
   $.get('/quizzes', function(data) {
     // data = [ {id: 1, title: "..."}, {id:2, title: "..."} ]
     _.each(data, function(element) {
@@ -57,11 +60,21 @@ $(document).ready(function() {
           var quizHTML = uncompiledTemplate({content: quizData});
           $('#quizz-list').append(quizHTML);
         });
-        //remove html() of #add-quizz-form and replace with my-template5
-          //add new text input fields for question, correct answer, and choices
+        //remove html() of #quizz-form and replace with my-template5
+        $('#quizz-form').empty().append(uncompiledTemplate5);
           //add new button to add new question
+            //add new text input fields for question, correct answer, and choices
+              //append new input fields to form
 
+          //when click of save button, then post new questions, answers, and choices to database
+            //iterate through number of input fields and save values to object
       });
+
+      // when close quizz button is being clicked, then make window disappear
+      $("#close-quizz-form-btn").on('click', function() {
+        $("#quizz-form").addClass("hidden");
+      });
+
     });
     //creating questions
     // POST /quizzes/:id/questions
@@ -70,7 +83,12 @@ $(document).ready(function() {
     // "question[answer]": "Austin",
     // "question[choices": "Austin;Banana;Germany",
     // "question[type]": "multiple"
-    // }
+    // } 
+  // major refactoring of functions into separate modules (quizzes, questions, scores)
+  // modify a quizz and its question
+  // delete a quizz and its question
+  // add a scoring system without the use of the database
+  // keep track of % average scores per quizz and keep a stats page
 
   // You can delete a quizz 
     $("#remove-quizz-btn").on('click', function() {
@@ -113,6 +131,11 @@ $(document).ready(function() {
               }
             });
           });
+      });
+      
+      // when close quizz button is being clicked, then make window disappear
+      $("#close-quizz-form-btn").on('click', function() {
+        $("#quizz-form").addClass("hidden");
       });
     });
 

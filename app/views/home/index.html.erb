@@ -1,21 +1,25 @@
 
-  <div class="list-group" id="quizz-list">
-    <li class="list-group-item list-group-item-warning" id="main-list-title">Please choose a quizz from below:</li>
-    <!-- This is where each quiz item goes. You get them from the templates -->
-  </div>
-  <button type="button" class="btn btn-primary" id='create-quizz-btn'>Create Quizz</button>
-  <button type="button" class="btn btn-danger" id='remove-quizz-btn'>Remove Quizz</button>
+<div class="list-group" id="quizz-list">
+  <li class="list-group-item list-group-item-warning" id="main-list-title">Please choose a quizz from below:</li>
+  <!-- This is where each quiz item goes. You get them from the templates -->
+</div>
 
-  <div class="panel panel-warning hidden" id="question-main"></div>
+<div class="panel panel-warning hidden" id="question-main"></div>
 
-  <div class="modal fade" id="myModal">
-    <div class="modal-dialog">
-      <div class="modal-content">
-      </div><!-- /.modal-content -->
-    </div><!-- /.modal-dialog -->
-  </div><!-- /.modal -->
+<button type="button" class="btn btn-primary" id='create-quizz-btn'>Create Quizz</button>
+<button type="button" class="btn btn-danger" id='remove-quizz-btn'>Remove Quizz</button>
+
+<div class="modal fade" id="myModal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<!-- Scripts -->
 
 <div class="form-box hidden" id="quizz-form">
+
   <script type="text/template" class="my-template4">
     <form class="form-horizontal" role="form">
       <div class="form-group">
@@ -27,11 +31,13 @@
       <div class="form-group">
         <div class="col-sm-offset-2 col-sm-10">
           <button type="submit" class="btn btn-warning" id="quizz-form-btn"><%%= content.type %></button>
+          <button type="submit" class="btn btn-warning" id="close-quizz-form-btn">Close</button>
         </div>
       </div>
     </form>
   </script>
-</div>
+
+</div><!-- end quizz-form -->
 
   <script type="text/template" class="my-template5">
     <form class="form-horizontal" role="form">
@@ -49,6 +55,7 @@
      </div>
      <div class="form-group">
        <div class="col-sm-offset-2 col-sm-10">
+         <button type="submit" class="btn btn-warning" id="add-quizz-btn">Save All</button>
          <button type="submit" class="btn btn-warning" id="add-quizz-btn">Add More Questions</button>
        </div>
      </div>
